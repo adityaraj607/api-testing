@@ -43,8 +43,53 @@ notebook.add(headers_tab, text="Headers")
 notebook.add(body_tab, text="Body")
 notebook.add(auth_tab, text="Auth")
 
-ttk.Label(params_tab, text="Query Parameters").pack(anchor="w")
-ttk.Label(headers_tab, text="Request Headers").pack(anchor="w")
+
+
+
+def create_key_value_table(parent, title):
+    frame = ttk.Frame(parent)
+    frame.pack(fill="both", expand=True)
+
+    ttk.Label(frame, text=title).pack(anchor="w", pady=(0, 8))
+
+    table = ttk.Frame(frame)
+    table.pack(fill="x")
+
+    ttk.Label(table, text="Key").grid(row=0, column=0, sticky="w")
+    ttk.Label(table, text="Value").grid(row=0, column=1, sticky="w")
+
+    table.columnconfigure(0, weight=1)
+    table.columnconfigure(1, weight=2)
+
+    rows = []
+
+    def add_row():
+        row = len(rows) + 1
+
+        key = ttk.Entry(table)
+        value = ttk.Entry(table)
+
+        key.grid(row=row, column=0, sticky="ew", padx=(0, 8), pady=4)
+        value.grid(row=row, column=1, sticky="ew", pady=4)
+
+        rows.append((key, value))
+
+    def get_data():
+        return {
+            key.get().strip(): value.get()
+            for key, value in rows
+            if key.get().strip()
+        }
+
+    ttk.Button(frame, text="Add Row", command=add_row).pack(
+        anchor="w", pady=8
+    )
+
+    add_row()
+    return get_data
+
+get_params = create_key_value_table(params_tab, "Query Parameters")
+get_headers = create_key_value_table(headers_tab, "Request Headers")
 ttk.Label(body_tab, text="Request Body").pack(anchor="w")
 ttk.Label(auth_tab, text="Authentication").pack(anchor="w")
 
