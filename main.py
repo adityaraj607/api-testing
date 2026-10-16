@@ -30,5 +30,22 @@ send_button.pack(side="left")
 status_label = ttk.Label(root, text="Ready")
 status_label.pack(anchor="w", padx=12)
 
+notebook = ttk.Notebook(root)
+notebook.pack(fill="both", expand=True, padx=12, pady=12)
+
+params_tab = ttk.Frame(notebook, padding=10)
+headers_tab = ttk.Frame(notebook, padding=10)
+body_tab = ttk.Frame(notebook, padding=10)
+auth_tab = ttk.Frame(notebook, padding=10)
+
+notebook.add(params_tab, text="Params")
+notebook.add(headers_tab, text="Headers")
+notebook.add(body_tab, text="Body")
+notebook.add(auth_tab, text="Auth")
+
+ttk.Label(params_tab, text="Query Parameters").pack(anchor="w")
+ttk.Label(headers_tab, text="Request Headers").pack(anchor="w")
+ttk.Label(body_tab, text="Request Body").pack(anchor="w")
+ttk.Label(auth_tab, text="Authentication").pack(anchor="w")
 
 root.mainloop()
