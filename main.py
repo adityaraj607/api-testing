@@ -46,6 +46,7 @@ notebook.add(auth_tab, text="Auth")
 
 
 
+
 def create_key_value_table(parent, title):
     frame = ttk.Frame(parent)
     frame.pack(fill="both", expand=True)
@@ -64,20 +65,36 @@ def create_key_value_table(parent, title):
     rows = []
 
     def add_row():
-        row = len(rows) + 1
+        row_frame = len(rows) + 1
 
         key = ttk.Entry(table)
         value = ttk.Entry(table)
+        delete_button = ttk.Button(table, text="Delete")
 
-        key.grid(row=row, column=0, sticky="ew", padx=(0, 8), pady=4)
-        value.grid(row=row, column=1, sticky="ew", pady=4)
+        key.grid(row=row_frame, column=0, sticky="ew", padx=(0, 8), pady=4)
+        value.grid(row=row_frame, column=1, sticky="ew", padx=(0, 8), pady=4)
+        delete_button.grid(row=row_frame, column=2, pady=4)
 
-        rows.append((key, value))
+        row_data = (key, value, delete_button)
+        rows.append(row_data)
+
+        def delete_row():
+            key.destroy()
+            value.destroy()
+            delete_button.destroy()
+            rows.remove(row_data)
+
+            for index, (k, v, button) in enumerate(rows, start=1):
+                k.grid(row=index, column=0, sticky="ew", padx=(0, 8), pady=4)
+                v.grid(row=index, column=1, sticky="ew", padx=(0, 8), pady=4)
+                button.grid(row=index, column=2, pady=4)
+
+        delete_button.configure(command=delete_row)
 
     def get_data():
         return {
             key.get().strip(): value.get()
-            for key, value in rows
+            for key, value, button in rows
             if key.get().strip()
         }
 
@@ -87,6 +104,7 @@ def create_key_value_table(parent, title):
 
     add_row()
     return get_data
+
 
 get_params = create_key_value_table(params_tab, "Query Parameters")
 get_headers = create_key_value_table(headers_tab, "Request Headers")
